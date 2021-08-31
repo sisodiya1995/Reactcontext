@@ -1,27 +1,29 @@
 import React,{useState} from 'react';
-import Card, { Iprops } from './card';
-import CustomerData from './customerData';
+import Userform, { Iuser} from './card';
+import UserData from './customerData';
+import { userContext } from './customerData';
+import{v4 as uuid} from 'uuid'
 
-const  App=()=> {
-                   const [customers, setcustomers]= useState<Iprops[]>([]);
-                  const Adddata = (props:Iprops):void =>{
-                  const newCustomer ={fname:props.fname,lname:props.lname,gender:props.gender};
-                   setcustomers([...customers, newCustomer])
+
+
+     const  App=()=> {
+                   const [users, setusers]= useState<Iuser[]>([]);
+                   const Adduser = (props:Iuser):void =>{
+                                        setusers([...users,{id:uuid(),fname:props.fname,lname:props.lname,gender:props.gender} ])
                                                        };
-                  const Deletedata=(Customerdatadelete:string):void  =>   {
-                             setcustomers(customers.filter((task)  =>{
-                    return task.fname !== Customerdatadelete;
-                                        }));
-                                         };
-  return(
-    <div> 
-                
-                      <h3 style={{textAlign:'center'}}>Customer Input</h3>
-                         <Card adddata={Adddata}/>
-                         {customers.map((task:Iprops,key:number)=>{
-                        return <CustomerData key={key} task={task} Deletedata={Deletedata}/>
-                    })}   
-    </div>
+                  const Deleteuser=(id:string):void  =>   {
+                                              setusers(users.filter((users)  =>{
+                                              return users.id!== id;
+                                                                          }));
+                                                         };
+           return(
+               <div> 
+                      <userContext.Provider value={{users ,Adduser,Deleteuser}}>
+                      <h2 style={{textAlign:'center'}}>User Detail</h2>
+                          <Userform/>
+                          <UserData/>
+                       </userContext.Provider>                     
+              </div>
   );
   };
 
